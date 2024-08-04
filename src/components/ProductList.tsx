@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ProductCard from './ProductCard';
-import { Product, fetchProducts, addProduct, updateProduct, deleteProduct } from '../api';
+import { Product, fetchProducts, addProduct, updateProduct, deleteProduct, fetchUser, User } from '../api';
 
 interface ProductListProps {
   token: string;
@@ -13,30 +13,45 @@ const ProductList: React.FC<ProductListProps> = ({ token, searchQuery }) => {
     name: '',
     price: 0,
     description: '',
-    category: 'food'
+    category: 'food',
   });
   const [categoryFilter, setCategoryFilter] = useState<string>('');
+  const [user, setUser] = useState<User | null>(null);
 
   const fetchAndSetProducts = async () => {
-    const products = await fetchProducts();
-    setProducts(products);
+    try {
+      const products = await fetchProducts(token);
+      setProducts(products);
+    } catch (error) {
+      console.error('Fetching products failed:', error);
+    }
+  };
+
+  const fetchAndSetUser = async () => {
+    try {
+      const user = await fetchUser(token);
+      setUser(user);
+    } catch (error) {
+      console.error('Fetching user failed:', error);
+    }
   };
 
   useEffect(() => {
     fetchAndSetProducts();
+    fetchAndSetUser();
   }, [token]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setNewProduct((prev) => ({
       ...prev,
-      [name]: name === 'price' ? parseFloat(value) : value
+      [name]: name === 'price' ? parseFloat(value) : value,
     }));
   };
 
   const handleAddProduct = async () => {
     try {
-      await addProduct(newProduct as Omit<Product, 'id'>);
+      await addProduct(newProduct as Omit<Product, 'id'>, token);
       setNewProduct({ name: '', price: 0, description: '', category: 'food' });
       fetchAndSetProducts();
     } catch (error) {
@@ -46,7 +61,7 @@ const ProductList: React.FC<ProductListProps> = ({ token, searchQuery }) => {
 
   const handleUpdate = async (id: string, updatedProduct: Partial<Product>) => {
     try {
-      await updateProduct(id, updatedProduct);
+      await updateProduct(id, updatedProduct, token);
       fetchAndSetProducts();
     } catch (error) {
       console.error('Updating product failed:', error);
@@ -55,7 +70,7 @@ const ProductList: React.FC<ProductListProps> = ({ token, searchQuery }) => {
 
   const handleDelete = async (id: string) => {
     try {
-      await deleteProduct(id);
+      await deleteProduct(id, token);
       fetchAndSetProducts();
     } catch (error) {
       console.error('Deleting product failed:', error);
@@ -67,17 +82,18 @@ const ProductList: React.FC<ProductListProps> = ({ token, searchQuery }) => {
   };
 
   const filteredProducts = products
-    .filter((product) =>
-      product.name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    .filter((product) =>
-      categoryFilter ? product.category === categoryFilter : true
-    );
+    .filter((product) => product.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    .filter((product) => (categoryFilter ? product.category === categoryFilter : true));
 
   return (
     <div>
+      {user && (
+        <div className="user-card alert alert-info">
+          <h3>Logged in as: {user.username}</h3>
+        </div>
+      )}
       <center><h2>Products Managing System</h2></center>
-      <center><button onClick={fetchAndSetProducts}  className="btn btn-outline-warning">Refresh Products</button></center>
+      <center><button onClick={fetchAndSetProducts} className="btn btn-outline-warning">Refresh Products</button></center>
       <div className="filter-section">
         <select value={categoryFilter} onChange={handleCategoryChange}>
           <option value="">All Categories</option>

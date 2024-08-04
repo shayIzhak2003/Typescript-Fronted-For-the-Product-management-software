@@ -14,16 +14,25 @@ const App: React.FC = () => {
 
   const [token, setToken] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleLogin = (token: string) => {
-    setToken(token);
-    localStorage.setItem('token', token); // Save token in localStorage
+    if (token) {
+      setToken(token);
+      localStorage.setItem('token', token); // Save token in localStorage
+      setErrorMessage('');
+    } else {
+      setErrorMessage('Login failed. Please check your username and password.');
+    }
   };
 
   return (
     <div className="container">
       {!token ? (
-        <Login onLogin={handleLogin} />
+        <div>
+          {errorMessage && <h3 style={{ color: 'red' }}>{errorMessage}</h3>}
+          <Login onLogin={handleLogin} />
+        </div>
       ) : (
         <div>
           <Carousel items={carouselItems} />

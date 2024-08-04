@@ -8,13 +8,22 @@ interface LoginProps {
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleLogin = async () => {
     try {
-      await login({ username, password });
-      const token = localStorage.getItem('token') || ''; // Assuming token is saved in localStorage
-      onLogin(token);
+      const result = await login({ username, password });
+      const token = result.token;
+
+      if (token) {
+        onLogin(token);
+        console.log(username)
+        setErrorMessage('');
+      } else {
+        setErrorMessage('Login failed. Please check your username and password.');
+      }
     } catch (error) {
+      setErrorMessage('Login failed. Please check your username and password.');
       console.error('Login failed:', error);
     }
   };
@@ -22,6 +31,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   return (
     <div className="login-form">
       <h2>Login</h2>
+      {errorMessage && <h3 style={{ color: 'red' }}>{errorMessage}</h3>}
       <input
         placeholder="Username"
         value={username}

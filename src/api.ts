@@ -2,8 +2,6 @@ import axios from 'axios';
 
 const BASE_URL = 'http://localhost:3000/api';
 
-let token: string = ''; // This should be managed more securely
-
 export interface User {
   username: string;
   password: string;
@@ -17,24 +15,39 @@ export interface Product {
   category: string;
 }
 
+// Fetch user info
+export const fetchUser = async (token: string): Promise<User> => {
+  try {
+    const response = await axios.get(`${BASE_URL}/users/file`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Fetching user failed:', error);
+    throw error;
+  }
+};
+
 // Log in and get a token
-export const login = async (user: User): Promise<void> => {
+export const login = async (user: User): Promise<{ token: string }> => {
   try {
     const response = await axios.post(`${BASE_URL}/users/login`, user);
-    token = response.data.token;
+    const token = response.data.token;
     console.log('Login successful, token:', token);
     localStorage.setItem('token', token); // Save token in localStorage
+    return { token };
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       console.error('Login failed:', error.response?.data || error.message);
     } else {
       console.error('Login failed:', error);
     }
+    throw new Error('Login failed');
   }
 };
 
 // Fetch all products
-export const fetchProducts = async (): Promise<Product[]> => {
+export const fetchProducts = async (token: string): Promise<Product[]> => {
   try {
     const response = await axios.get(`${BASE_URL}/products`, {
       headers: { Authorization: `Bearer ${token}` }
@@ -47,12 +60,12 @@ export const fetchProducts = async (): Promise<Product[]> => {
     } else {
       console.error('Fetching products failed:', error);
     }
-    return [];
+    throw new Error('Fetching products failed');
   }
 };
 
 // Delete a product
-export const deleteProduct = async (productId: string): Promise<void> => {
+export const deleteProduct = async (productId: string, token: string): Promise<void> => {
   try {
     await axios.delete(`${BASE_URL}/products/${productId}`, {
       headers: { Authorization: `Bearer ${token}` }
@@ -64,11 +77,12 @@ export const deleteProduct = async (productId: string): Promise<void> => {
     } else {
       console.error(`Deleting product ${productId} failed:`, error);
     }
+    throw new Error(`Deleting product ${productId} failed`);
   }
 };
 
 // Update a product
-export const updateProduct = async (productId: string, updatedProduct: Partial<Product>): Promise<void> => {
+export const updateProduct = async (productId: string, updatedProduct: Partial<Product>, token: string): Promise<void> => {
   try {
     await axios.put(`${BASE_URL}/products/${productId}`, updatedProduct, {
       headers: { Authorization: `Bearer ${token}` }
@@ -80,11 +94,12 @@ export const updateProduct = async (productId: string, updatedProduct: Partial<P
     } else {
       console.error(`Updating product ${productId} failed:`, error);
     }
+    throw new Error(`Updating product ${productId} failed`);
   }
 };
 
 // Add a product
-export const addProduct = async (product: Omit<Product, 'id'>): Promise<void> => {
+export const addProduct = async (product: Omit<Product, 'id'>, token: string): Promise<void> => {
   try {
     await axios.post(`${BASE_URL}/products`, product, {
       headers: { Authorization: `Bearer ${token}` }
@@ -96,5 +111,6 @@ export const addProduct = async (product: Omit<Product, 'id'>): Promise<void> =>
     } else {
       console.error('Adding product failed:', error);
     }
+    throw new Error('Adding product failed');
   }
 };
