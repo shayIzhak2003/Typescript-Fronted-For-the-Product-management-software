@@ -21,7 +21,17 @@ export const fetchUser = async (token: string): Promise<User> => {
     const response = await axios.get(`${BASE_URL}/users/file`, {
       headers: { Authorization: `Bearer ${token}` }
     });
-    return response.data;
+    const users: User[] = response.data;
+
+    // Assuming you need to find a specific user, you should know the username beforehand
+    // Replace 'your-username' with the actual username or another identifying property
+    const user = users.find((user) => user.username === 'shay'); // Adjust this line as per your logic
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return user;
   } catch (error) {
     console.error('Fetching user failed:', error);
     throw error;

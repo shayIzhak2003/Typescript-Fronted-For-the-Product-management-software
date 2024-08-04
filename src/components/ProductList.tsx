@@ -31,6 +31,7 @@ const ProductList: React.FC<ProductListProps> = ({ token, searchQuery }) => {
     try {
       const user = await fetchUser(token);
       setUser(user);
+      console.log(`Logged in as ${user.username}`);  // Moved here to ensure user is set
     } catch (error) {
       console.error('Fetching user failed:', error);
     }
@@ -89,10 +90,15 @@ const ProductList: React.FC<ProductListProps> = ({ token, searchQuery }) => {
     <div>
       {user && (
         <div className="user-card alert alert-info">
-          <h3>Logged in as: {user.username}</h3>
+          <h3 style={{ fontFamily: "Playwrite AU NSW, cursive" }}>Logged in as: {user.username}</h3>
         </div>
       )}
-      <center><h2>Products Managing System</h2></center>
+      <center>
+  <h2 style={{ fontFamily: "Playwrite AU NSW, cursive" }}>
+    Products Managing System
+  </h2>
+</center>
+
       <center><button onClick={fetchAndSetProducts} className="btn btn-outline-warning">Refresh Products</button></center>
       <div className="filter-section">
         <select value={categoryFilter} onChange={handleCategoryChange}>
