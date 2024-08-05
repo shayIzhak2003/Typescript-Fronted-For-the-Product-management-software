@@ -14,14 +14,17 @@ const ProductList: React.FC<ProductListProps> = ({ token, searchQuery }) => {
     price: 0,
     description: '',
     category: 'food',
+    quantity: 0,  // Added quantity property
   });
   const [categoryFilter, setCategoryFilter] = useState<string>('');
   const [user, setUser] = useState<User | null>(null);
+  const [stockWorth, setStockWorth] = useState<number>(0);
 
   const fetchAndSetProducts = async () => {
     try {
       const products = await fetchProducts(token);
       setProducts(products);
+      calculateAllStockWorth(products);
     } catch (error) {
       console.error('Fetching products failed:', error);
     }
@@ -31,7 +34,7 @@ const ProductList: React.FC<ProductListProps> = ({ token, searchQuery }) => {
     try {
       const user = await fetchUser(token);
       setUser(user);
-      console.log(`Logged in as ${user.username}`);  // Moved here to ensure user is set
+      console.log(`Logged in as ${user.username}`);
     } catch (error) {
       console.error('Fetching user failed:', error);
     }
@@ -46,14 +49,14 @@ const ProductList: React.FC<ProductListProps> = ({ token, searchQuery }) => {
     const { name, value } = e.target;
     setNewProduct((prev) => ({
       ...prev,
-      [name]: name === 'price' ? parseFloat(value) : value,
+      [name]: name === 'price' || name === 'quantity' ? parseFloat(value) : value,
     }));
   };
 
   const handleAddProduct = async () => {
     try {
       await addProduct(newProduct as Omit<Product, 'id'>, token);
-      setNewProduct({ name: '', price: 0, description: '', category: 'food' });
+      setNewProduct({ name: '', price: 0, description: '', category: 'food', quantity: 0 });
       fetchAndSetProducts();
     } catch (error) {
       console.error('Adding product failed:', error);
@@ -82,6 +85,15 @@ const ProductList: React.FC<ProductListProps> = ({ token, searchQuery }) => {
     setCategoryFilter(e.target.value);
   };
 
+  const calculateAllStockWorth = (products: Product[]) => {
+    const totalWorth = products.reduce((acc, product) => {
+      const productPrice = typeof product.price === 'number' ? product.price : 0;
+      const productQuantity = typeof product.quantity === 'number' ? product.quantity : 0;
+      return acc + productPrice * productQuantity;
+    }, 0);
+    setStockWorth(totalWorth);
+  };
+
   const filteredProducts = products
     .filter((product) => product.name.toLowerCase().includes(searchQuery.toLowerCase()))
     .filter((product) => (categoryFilter ? product.category === categoryFilter : true));
@@ -94,20 +106,21 @@ const ProductList: React.FC<ProductListProps> = ({ token, searchQuery }) => {
         </div>
       )}
       <center>
-  <h2 style={{ fontFamily: "Playwrite AU NSW, cursive" }}>
-    Products Managing System
-  </h2>
-</center>
-
-      <center><button onClick={fetchAndSetProducts} className="btn btn-outline-warning">Refresh Products</button></center>
+        <h2 style={{ fontFamily: "Playwrite AU NSW, cursive" }}>Products Managing System</h2>
+      </center>
+      <center>
+        <button onClick={fetchAndSetProducts} className="btn btn-outline-warning">Refresh Products</button>
+      </center>
       <div className="filter-section">
-        <select value={categoryFilter} onChange={handleCategoryChange}>
+        <center>
+        <select value={categoryFilter} onChange={handleCategoryChange} className="form-select form-select-lg mb-3" style={{width:"50%"}}>
           <option value="">All Categories</option>
           <option value="food">Food</option>
           <option value="drink">Drink</option>
           <option value="goods">Goods</option>
           <option value="electronics">Electronics</option>
         </select>
+        </center>
       </div>
       <div className="product-list">
         {filteredProducts.map((product) => (
@@ -130,7 +143,11 @@ const ProductList: React.FC<ProductListProps> = ({ token, searchQuery }) => {
           <option value="goods">Goods</option>
           <option value="electronics">Electronics</option>
         </select>
+        <input name="quantity" placeholder="Quantity" type="number" value={newProduct.quantity} onChange={handleInputChange} />
         <button onClick={handleAddProduct}>Add Product</button>
+      </div>
+      <div className="stock-worth">
+        <h3>Total Stock Worth: ${stockWorth.toFixed(2)}</h3>
       </div>
     </div>
   );

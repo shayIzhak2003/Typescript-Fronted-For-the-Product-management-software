@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Product } from '../api';
 
 interface ProductCardProps {
@@ -15,13 +14,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onUpdate, onDelete }
     price: product.price,
     description: product.description,
     category: product.category,
+    quantity: product.quantity,  // Added quantity property
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setEditedProduct((prev) => ({
       ...prev,
-      [name]: name === 'price' ? parseFloat(value) : value,
+      [name]: name === 'price' || name === 'quantity' ? parseFloat(value) : value,
     }));
   };
 
@@ -60,15 +60,21 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onUpdate, onDelete }
             <option value="goods">Goods</option>
             <option value="electronics">Electronics</option>
           </select>
+          <input
+            name="quantity"
+            type="number"
+            value={editedProduct.quantity}
+            onChange={handleInputChange}
+          />
           <button onClick={handleSave}>Save</button>
         </>
       ) : (
         <>
-          <h3>Product Name: {product.name}</h3>
-          <p> Price: ${product.price}</p>
-          <p>Description: {product.description}</p>
-          <p>Category: {product.category}</p>
-          
+          <h3 style={{ fontFamily: "Oswald, sans-serif" }}>Product Name: {product.name}</h3>
+          <p style={{ fontFamily: "Playwrite AU NSW, cursive" }}> Price: ${product.price}</p>
+          <p style={{ fontFamily: "Playwrite AU NSW, cursive" }}>Description: {product.description}</p>
+          <p style={{ fontFamily: "Playwrite AU NSW, cursive" }}>Category: {product.category}</p>
+          <p style={{ fontFamily: "Playwrite AU NSW, cursive" }}>Quantity: {product.quantity}</p>
           <button onClick={() => setIsEditing(true)}>Edit</button>
         </>
       )}

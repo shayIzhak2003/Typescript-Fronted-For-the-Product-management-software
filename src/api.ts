@@ -13,6 +13,7 @@ export interface Product {
   price: number;
   description: string;
   category: string;
+  quantity: number; // Added quantity property
 }
 
 // Fetch user info
@@ -25,7 +26,7 @@ export const fetchUser = async (token: string): Promise<User> => {
 
     // Assuming you need to find a specific user, you should know the username beforehand
     // Replace 'your-username' with the actual username or another identifying property
-    const user = users.find((user) => user.username === 'shay'); // Adjust this line as per your logic
+    const user = users.find((user) => user.username === user.username); // Adjust this line as per your logic
 
     if (!user) {
       throw new Error('User not found');
