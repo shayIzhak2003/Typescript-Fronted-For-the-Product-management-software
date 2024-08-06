@@ -3,6 +3,8 @@ import Login from './components/Login';
 import ProductList from './components/ProductList';
 import Carousel from './components/Carousel';
 import SearchBar from './components/SearchBar';
+import Header from './components/Header';
+import Footer from './components/Footer';
 import './App.css';
 
 const App: React.FC = () => {
@@ -35,9 +37,11 @@ const App: React.FC = () => {
         </div>
       ) : (
         <div>
+          <Header title="Products Managing System" subtitle="Manage your inventory effectively" />
           <Carousel items={carouselItems} />
           <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           <ProductList token={token} searchQuery={searchQuery} />
+          <Footer/>
         </div>
       )}
     </div>

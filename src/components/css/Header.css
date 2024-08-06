@@ -1,0 +1,21 @@
+
+.header {
+    background: #007bff; /* Bootstrap primary color */
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    border-bottom: 2px solid #0056b3; /* Darker shade of blue for the border */
+  }
+  
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    margin: 0;
+  }
+  
+  .header-subtitle {
+    font-family: 'Arial', sans-serif;
+    font-size: 1.25rem;
+    margin-top: 10px;
+  }
+  

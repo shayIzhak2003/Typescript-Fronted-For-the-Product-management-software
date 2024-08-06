@@ -215,4 +215,47 @@ body::before {
   margin-bottom: 20px;
   text-align: center;
 }
+color animation text
+.animate-charcter
+{
+   text-transform: uppercase;
+  background-image: linear-gradient(
+    -225deg,
+    #231557 0%,
+    #44107a 29%,
+    #ff1361 67%,
+    #fff800 100%
+  );
+  background-size: auto auto;
+  background-clip: border-box;
+  background-size: 200% auto;
+  color: #fff;
+  background-clip: text;
+  /* text-fill-color: transparent; */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textclip 2s linear infinite;
+  display: inline-block;
+      /* font-size: 25px; */
+}
+
+@keyframes textclip {
+  to {
+    background-position: 200% center;
+  }
+}
+
+.no-products-message {
+  font-size: 1.5rem;
+  color: #ff4d4d; /* A soft red color */
+  text-align: center;
+  margin-top: 20px;
+  font-family: 'Arial', sans-serif;
+  padding: 10px;
+  border: 2px solid #ff4d4d;
+  border-radius: 5px;
+  background-color: #ffe6e6; /* A light red background */
+}
+
+
 

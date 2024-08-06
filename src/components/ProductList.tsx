@@ -14,11 +14,12 @@ const ProductList: React.FC<ProductListProps> = ({ token, searchQuery }) => {
     price: 0,
     description: '',
     category: 'food',
-    quantity: 0,  // Added quantity property
+    quantity: 0,
   });
   const [categoryFilter, setCategoryFilter] = useState<string>('');
   const [user, setUser] = useState<User | null>(null);
   const [stockWorth, setStockWorth] = useState<number>(0);
+  const [noProductsMessage, setNoProductsMessage] = useState<string>('');
 
   const fetchAndSetProducts = async () => {
     try {
@@ -44,6 +45,18 @@ const ProductList: React.FC<ProductListProps> = ({ token, searchQuery }) => {
     fetchAndSetProducts();
     fetchAndSetUser();
   }, [token]);
+
+  useEffect(() => {
+    const filteredProducts = products
+      .filter((product) => product.name.toLowerCase().includes(searchQuery.toLowerCase()))
+      .filter((product) => (categoryFilter ? product.category === categoryFilter : true));
+
+    if (filteredProducts.length === 0) {
+      setNoProductsMessage('No products found for the selected category and search query.');
+    } else {
+      setNoProductsMessage('');
+    }
+  }, [products, searchQuery, categoryFilter]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -102,7 +115,9 @@ const ProductList: React.FC<ProductListProps> = ({ token, searchQuery }) => {
     <div>
       {user && (
         <div className="user-card alert alert-info">
-          <h3 style={{ fontFamily: "Playwrite AU NSW, cursive" }}>Logged in as: {user.username}</h3>
+          <h3 style={{ fontFamily: "Playwrite AU NSW, cursive" }}>
+            Logged in as: <span style={{ display: "inline-block" }} className="">{user.username}</span>
+          </h3>
         </div>
       )}
       <center>
@@ -113,24 +128,28 @@ const ProductList: React.FC<ProductListProps> = ({ token, searchQuery }) => {
       </center>
       <div className="filter-section">
         <center>
-        <select value={categoryFilter} onChange={handleCategoryChange} className="form-select form-select-lg mb-3" style={{width:"50%"}}>
-          <option value="">All Categories</option>
-          <option value="food">Food</option>
-          <option value="drink">Drink</option>
-          <option value="goods">Goods</option>
-          <option value="electronics">Electronics</option>
-        </select>
+          <select value={categoryFilter} onChange={handleCategoryChange} className="form-select form-select-lg mb-3" style={{ width: "50%" }}>
+            <option value="">All Categories</option>
+            <option value="food">Food</option>
+            <option value="drink">Drink</option>
+            <option value="goods">Goods</option>
+            <option value="electronics">Electronics</option>
+          </select>
         </center>
       </div>
       <div className="product-list">
-        {filteredProducts.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            onUpdate={handleUpdate}
-            onDelete={handleDelete}
-          />
-        ))}
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onUpdate={handleUpdate}
+              onDelete={handleDelete}
+            />
+          ))
+        ) : (
+          <p className="no-products-message">{noProductsMessage}</p>
+        )}
       </div>
       <div className="product-form">
         <h3>Add New Product</h3>
@@ -146,8 +165,9 @@ const ProductList: React.FC<ProductListProps> = ({ token, searchQuery }) => {
         <input name="quantity" placeholder="Quantity" type="number" value={newProduct.quantity} onChange={handleInputChange} />
         <button onClick={handleAddProduct}>Add Product</button>
       </div>
+      <br />
       <div className="stock-worth">
-        <h3>Total Stock Worth: ${stockWorth.toFixed(2)}</h3>
+        <h3 style={{ fontFamily: "Permanent Marker, cursive" }}>Total Stock Worth: ${stockWorth.toFixed(2)}</h3>
       </div>
     </div>
   );

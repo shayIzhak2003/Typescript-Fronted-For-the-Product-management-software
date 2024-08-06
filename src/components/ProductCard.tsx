@@ -75,10 +75,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onUpdate, onDelete }
           <p style={{ fontFamily: "Playwrite AU NSW, cursive" }}>Description: {product.description}</p>
           <p style={{ fontFamily: "Playwrite AU NSW, cursive" }}>Category: {product.category}</p>
           <p style={{ fontFamily: "Playwrite AU NSW, cursive" }}>Quantity: {product.quantity}</p>
-          <button onClick={() => setIsEditing(true)}>Edit</button>
+          <button onClick={() => setIsEditing(true)}> <i className="fa fa-pen"></i></button>
         </>
       )}
-      <button onClick={() => onDelete(product.id)}>Delete</button>
+      <button onClick={() => onDelete(product.id)}><i className="fa-sharp fa-solid fa-trash"></i></button>
     </div>
   );
 };

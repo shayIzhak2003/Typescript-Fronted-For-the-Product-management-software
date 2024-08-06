@@ -1,0 +1,14 @@
+/* public/Footer.css */
+.footer {
+    background: #343a40; /* Bootstrap dark background color */
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+    border-top: 2px solid #212529; /* Darker shade for the border */
+  }
+  
+  .footer p {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+  }
+  
