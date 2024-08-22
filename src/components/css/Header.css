@@ -4,7 +4,10 @@
     color: #fff;
     padding: 20px;
     text-align: center;
-    border-bottom: 2px solid #0056b3; /* Darker shade of blue for the border */
+    border-bottom: 2px solid #0056b3;
+    transition: background-color 0.5s ease;
+    padding: 20px;
+    position: relative; /* Darker shade of blue for the border */
   }
   
   .header-title {
@@ -18,4 +21,26 @@
     font-size: 1.25rem;
     margin-top: 10px;
   }
+
+  
+  .header.light-mode {
+    background-color: #f0f0f0; /* Light background color */
+    color: #000; /* Light text color */
+  }
+  
+  .header.dark-mode {
+    background-color: #333; /* Dark background color */
+    color: #fff; /* Dark text color */
+  }
+  
+  .mode-toggle {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+  
   
