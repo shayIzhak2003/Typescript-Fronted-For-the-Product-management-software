@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import './css/Header.css'; 
-import { FaMoon, FaSun } from 'react-icons/fa'; // Make sure to install react-icons
+// src/components/Header.tsx
+import React from 'react';
+import './css/Header.css';
+import { FaMoon, FaSun } from 'react-icons/fa';
+import { useTheme } from './ThemeContext';
 
 interface HeaderProps {
   title: string;
@@ -8,11 +10,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ title, subtitle }) => {
-  const [isLightMode, setIsLightMode] = useState(true);
-
-  const toggleMode = () => {
-    setIsLightMode(prevMode => !prevMode);
-  };
+  const { isLightMode, toggleMode } = useTheme();
 
   return (
     <header className={`header ${isLightMode ? 'light-mode' : 'dark-mode'}`}>

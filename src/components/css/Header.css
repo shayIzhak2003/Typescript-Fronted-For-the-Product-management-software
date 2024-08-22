@@ -1,46 +1,63 @@
+/* Global styles for light mode */
+body.light-mode {
+  background-color: #f0f0f0;
+  color: #000;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
 
+/* Global styles for dark mode */
+body.dark-mode {
+  background-color: #333;
+  color: #fff;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* Header styles */
 .header {
-    background: #007bff; /* Bootstrap primary color */
-    color: #fff;
-    padding: 20px;
-    text-align: center;
-    border-bottom: 2px solid #0056b3;
-    transition: background-color 0.5s ease;
-    padding: 20px;
-    position: relative; /* Darker shade of blue for the border */
-  }
-  
-  .header-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.5rem;
-    margin: 0;
-  }
-  
-  .header-subtitle {
-    font-family: 'Arial', sans-serif;
-    font-size: 1.25rem;
-    margin-top: 10px;
-  }
+  background: #007bff; /* Default Bootstrap primary color */
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  border-bottom: 2px solid #0056b3; /* Darker shade of blue for the border */
+  transition: background-color 0.5s ease;
+  position: relative;
+}
 
-  
-  .header.light-mode {
-    background-color: #f0f0f0; /* Light background color */
-    color: #000; /* Light text color */
-  }
-  
-  .header.dark-mode {
-    background-color: #333; /* Dark background color */
-    color: #fff; /* Dark text color */
-  }
-  
-  .mode-toggle {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    position: absolute;
-    top: 20px;
-    right: 20px;
-  }
-  
-  
+/* Header styles for light mode */
+body.light-mode .header {
+  background: #007bff; /* Adjust if necessary */
+  color: #fff;
+}
+
+/* Header styles for dark mode */
+body.dark-mode .header {
+  background: #444; /* Adjust for dark mode */
+  color: #ddd; /* Adjust text color for dark mode */
+  border-bottom: 2px solid #222; /* Darker border color for dark mode */
+}
+
+/* Title styles */
+.header-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  margin: 0;
+}
+
+/* Subtitle styles */
+.header-subtitle {
+  font-family: 'Arial', sans-serif;
+  font-size: 1.25rem;
+  margin-top: 10px;
+}
+
+/* Mode toggle button styles */
+.mode-toggle {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: inherit; /* Ensure the icon color matches the text color */
+}

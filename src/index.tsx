@@ -1,15 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+import './index.css'; // Ensure your CSS file includes global styles for light and dark modes
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { ThemeProvider } from './components/ThemeContext'; // Import ThemeProvider
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
   </React.StrictMode>
 );
 

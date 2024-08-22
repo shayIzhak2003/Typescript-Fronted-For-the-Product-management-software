@@ -1,3 +1,4 @@
+// src/App.tsx
 import React, { useState } from 'react';
 import Login from './components/Login';
 import ProductList from './components/ProductList';
@@ -41,7 +42,7 @@ const App: React.FC = () => {
           <Carousel items={carouselItems} />
           <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           <ProductList token={token} searchQuery={searchQuery} />
-          <Footer/>
+          <Footer />
         </div>
       )}
     </div>
